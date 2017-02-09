@@ -1,4 +1,5 @@
-#!C:\PERL\bin\perl.exe
+
+use Test::More;
 
 use strict;
 use Data::Dumper;
@@ -70,7 +71,7 @@ sub calcular_posibles {
     # Recorro la columna
     foreach my $alto (1..9){
         my $valor = $tablero->{$ancho_}{$alto}{numero};
-        print "$ancho_-$alto_: evaluando columna en celda ($ancho_,$alto) valor: $valor".$/; # Debug
+        # print "$ancho_-$alto_: evaluando columna en celda ($ancho_,$alto) valor: $valor".$/; # Debug
         if ( $valor != 0 ){
             $tablero->{$ancho_}{$alto_}{posibles}{$valor} = 0;
         }
@@ -78,7 +79,7 @@ sub calcular_posibles {
     # Recorro la fila
     foreach my $ancho (1..9){
         my $valor = $tablero->{$ancho}{$alto_}{numero};
-        print "$ancho_-$alto_: evaluando fila    en celda ($ancho,$alto_) valor: $valor".$/; # Debug
+        # print "$ancho_-$alto_: evaluando fila    en celda ($ancho,$alto_) valor: $valor".$/; # Debug
         if ( $valor != 0 ){
             $tablero->{$ancho_}{$alto_}{posibles}{$valor} = 0;
         }
