@@ -51,7 +51,7 @@ sub set_value {
     foreach my $alto_ (1..9){
         $self->set_possible($ancho,$alto_,$valor,0);
     }
-    
+
     # Eliminar posibles de la columna
     foreach my $ancho_ (1..9){
         $self->set_possible($ancho_,$alto,$valor,0);
