@@ -27,15 +27,15 @@ is_deeply( $board->{initial_data}, $initial_data, 'data structures should be the
 
 is( $board->get_value(1,1), 1 );
 is( $board->get_value(9,9), 0 );
-is( $board->get_value(9,9), 0 );
 
 $board->set_value(1,1,9,1);
 is( $board->get_value(1,1), 9 );
-is( $board->{remaining}, 80 );
+
 $board->set_value(1,1,1,1);
 is( $board->get_value(1,1), 1 );
-is( $board->{remaining}, 79 );
 
+$board->update_remaining();
+is( $board->{remaining}, 80 );
 
 $board->set_possible(5,5,5,0);
 is( $board->{board}{5}{5}{possibles}{5}, 0 );

@@ -44,7 +44,7 @@ sub process_possible_values {
 
 sub set_value {
     my $self = shift;
-    my ($ancho,$alto,$number,$update_remaining) = @_;
+    my ($ancho,$alto,$number) = @_;
 
     $self->{board}->{$ancho}{$alto}{number} = $number;
     
@@ -57,8 +57,6 @@ sub set_value {
     foreach my $ancho_ (1..9){
         $self->set_possible($ancho_,$alto,$number,0);
     }
-
-    $self->{remaining} = $self->{remaining} - 1 if $update_remaining;
 }
 
 sub update_remaining {
