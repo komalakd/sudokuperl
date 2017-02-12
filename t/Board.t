@@ -28,10 +28,18 @@ is_deeply( $board->{initial_data}, $initial_data, 'data structures should be the
 is( $board->get_value(1,1), 1 );
 is( $board->get_value(9,9), 0 );
 
-$board->set_value(1,1,9,1);
+$board->set_value(1,1,9);
 is( $board->get_value(1,1), 9 );
 
-$board->set_value(1,1,1,1);
+foreach my $ancho (1..9){
+    is( $board->{board}->{$ancho}{1}{possibles}{9}, 0 );
+}
+
+foreach my $alto (1..9){
+    is( $board->{board}->{1}{$alto}{possibles}{9}, 0 );
+}
+
+$board->set_value(1,1,1);
 is( $board->get_value(1,1), 1 );
 
 $board->update_remaining();

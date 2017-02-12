@@ -19,27 +19,16 @@ sub new {
 sub process_initial_data {
     my $self = shift;
 
-    my $possibles = $self->process_possible_values();
+    my %possibles = map { $_, 1 } 1..9;
 
     foreach my $ancho (1..9){
         foreach my $alto (1..9){
             my $number = $self->{initial_data}->[$ancho-1][$alto-1];
             
             $self->set_value( $ancho,$alto,$number );
-            $self->{board}->{$ancho}{$alto}{possibles} = {%$possibles};
+            $self->{board}->{$ancho}{$alto}{possibles} = {%possibles};
         }   
     }
-}
-
-sub process_possible_values {
-    my $class = shift;
-
-    my $possibles = {};
-    foreach my $number (1..9){
-        $possibles->{$number} = 1;
-    }
-    
-    return $possibles;
 }
 
 sub set_value {
@@ -68,7 +57,7 @@ sub set_possible {
     my $self = shift;
     my ($ancho,$alto,$number,$valor) = @_;
 
-    $self->{board}->{$ancho_}{$alto}{possibles}{$number} = $valor;
+    $self->{board}->{$ancho}{$alto}{possibles}{$number} = $valor;
 }
 
 sub get_value {
