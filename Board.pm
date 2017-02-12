@@ -1,40 +1,40 @@
 package Board;
 
 sub new {
-	my $class = shift;
-	my %args = @_;
+    my $class = shift;
+    my %args = @_;
 
-	my $self = bless {
-		initial_data => $args{initial_data},
-		board        => {},
-		remaining    => 9 * 9,       
-	
-	}, $class;
+    my $self = bless {
+        initial_data => $args{initial_data},
+        board        => {},
+        remaining    => 9 * 9,       
+    
+    }, $class;
 
-	$self->process_initial_data();
+    $self->process_initial_data();
 
-	return $self;
+    return $self;
 }
 
 sub process_initial_data {
-	my $self = shift;
+    my $self = shift;
 
     my $possibles = $self->process_possible_values();
 
-	foreach my $ancho (1..9){
-	    foreach my $alto (1..9){
-	    	my $number = $self->{initial_data}->[$ancho-1][$alto-1];
-	    	
-	    	$self->set_value( $ancho,$alto,$number );
-	        $self->{board}->{$ancho}{$alto}{possibles} = {%$possibles};
-	    }   
-	}
+    foreach my $ancho (1..9){
+        foreach my $alto (1..9){
+            my $number = $self->{initial_data}->[$ancho-1][$alto-1];
+            
+            $self->set_value( $ancho,$alto,$number );
+            $self->{board}->{$ancho}{$alto}{possibles} = {%$possibles};
+        }   
+    }
 }
 
 sub process_possible_values {
-	my $class = shift;
+    my $class = shift;
 
-	my $possibles = {};
+    my $possibles = {};
     foreach my $number (1..9){
         $possibles->{$number} = 1;
     }
@@ -79,7 +79,7 @@ sub get_value {
 }
 
 sub debug {
-	my $self = shift;
+    my $self = shift;
     
     foreach my $alto (1..9){
         
