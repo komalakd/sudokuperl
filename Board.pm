@@ -19,17 +19,18 @@ sub new {
 sub process_initial_data {
 	my $self = shift;
 
+    my $possibles = $self->process_possible_values();
+
 	foreach my $ancho (1..9){
 	    foreach my $alto (1..9){
 	    	my $number = $self->{initial_data}->[$ancho-1][$alto-1];
 	    	
 	    	$self->set_value( $ancho,$alto,$number );
-	        $self->{board}->{$ancho}{$alto}{possibles} = process_possible_values(); # FIXME!
+	        $self->{board}->{$ancho}{$alto}{possibles} = {%$possibles};
 	    }   
 	}
 }
 
-# FIXME delete method
 sub process_possible_values {
 	my $class = shift;
 
@@ -43,21 +44,26 @@ sub process_possible_values {
 
 sub set_value {
     my $self = shift;
-    my ($ancho,$alto,$valor) = @_;
+    my ($ancho,$alto,$number,$update_remaining) = @_;
 
-    $self->{board}->{$ancho}{$alto}{number} = $valor;
+    $self->{board}->{$ancho}{$alto}{number} = $number;
     
     # Eliminar posibles de la fila
     foreach my $alto_ (1..9){
-        $self->set_possible($ancho,$alto_,$valor,0);
+        $self->set_possible($ancho,$alto_,$number,0);
     }
 
     # Eliminar posibles de la columna
     foreach my $ancho_ (1..9){
-        $self->set_possible($ancho_,$alto,$valor,0);
+        $self->set_possible($ancho_,$alto,$number,0);
     }
 
-    $self->{remaining} = $self->{remaining} - 1; # FIXME: refactor
+    $self->{remaining} = $self->{remaining} - 1 if $update_remaining;
+}
+
+sub update_remaining {
+    my $self = shift;
+    $self->{remaining} = $self->{remaining} - 1;
 }
 
 sub set_possible {

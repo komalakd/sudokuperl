@@ -93,7 +93,8 @@ sub search_possibles {
     if ( scalar @possibles == 1 ){
     my $posible = $possibles[0];
         print Dumper( "$ancho-$alto: posibleee: $posible" );
-        $self->board()->set_value( $ancho,$alto,$possibles[0] );
+        $self->board()->set_value( $ancho,$alto,$possibles[0]);
+        $self->board()->update_remaining();
     }
 } 
 
