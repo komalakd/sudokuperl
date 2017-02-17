@@ -36,7 +36,17 @@ sub set_value {
     my ($ancho,$alto,$number) = @_;
 
     $self->{board}->{$ancho}{$alto}{number} = $number;
-    
+}
+
+sub update_remaining {
+    my $self = shift;
+    $self->{remaining} = $self->{remaining} - 1;
+}
+
+sub update_possibles {
+    my $self = shift;
+    my ($ancho,$alto,$number) = @_;
+
     # Eliminar posibles de la fila
     foreach my $alto_ (1..9){
         $self->set_possible($ancho,$alto_,$number,0);
@@ -46,11 +56,6 @@ sub set_value {
     foreach my $ancho_ (1..9){
         $self->set_possible($ancho_,$alto,$number,0);
     }
-}
-
-sub update_remaining {
-    my $self = shift;
-    $self->{remaining} = $self->{remaining} - 1;
 }
 
 sub set_possible {
@@ -70,6 +75,8 @@ sub get_value {
 sub debug {
     my $self = shift;
     
+    return unless $self->{debug};
+
     foreach my $alto (1..9){
         
         print $/ if ( ($alto-1) % 3 == 0 );
@@ -82,6 +89,11 @@ sub debug {
     
     }
     print "\n\n\n\n\n\n";
+}
+
+sub solved {
+    my $self = shift;
+    return $self->{remaining} == 0 ? 1 : 0;
 }
 
 1;

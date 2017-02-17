@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-use Test::More qw/no_plan/;
+use Test::More tests => 31;
 
 use strict;
 use lib('../');
@@ -31,6 +31,8 @@ is( $board->get_value(9,9), 0 );
 $board->set_value(1,1,9);
 is( $board->get_value(1,1), 9 );
 
+$board->update_possibles(1,1,9);
+
 foreach my $ancho (1..9){
     is( $board->{board}->{$ancho}{1}{possibles}{9}, 0 );
 }
@@ -51,5 +53,10 @@ is( $board->{board}{5}{5}{possibles}{5}, 0 );
 $board->set_possible(5,5,5,1);
 is( $board->{board}{5}{5}{possibles}{5}, 1 );
 
+is( $board->solved(), 0 );
+TODO: {
+    local $TODO = 'test a solved game';
+    is( $board->solved(), 0 );
+}
 
-# done_testing();
+done_testing();

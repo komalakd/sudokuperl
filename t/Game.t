@@ -1,16 +1,11 @@
 #!/usr/bin/perl
-use Test::More qw/no_plan/;
+use Test::More tests => 5;
 
 use strict;
 use lib('../');
 
 use_ok('Game');
 require_ok('Game');
-
-#use Game;
-
-# my $initial_data = [];
-# isnt( Game->new( $initial_data ), 1 );
 
 my $initial_data = [
     [1,2,3,4,5,6,7,8,0],
@@ -23,14 +18,20 @@ my $initial_data = [
     [8,0,0,0,0,0,0,0,0],
     [9,0,0,0,0,0,0,0,0],
 ];
-my $game = Game->new( initial_data => $initial_data );
-#isnt( $game, undef );
-
-is( $game->solve(), 1 );
+my $game = Game->new(
+    initial_data => $initial_data,
+);
 
 SKIP: {
 	local $TODO = 'i need to test this...';
 	ok( Game->new( $initial_data ) );
 }
 
- #done_testing();
+is( $game->solve(), 0 );
+
+TODO: {
+    local $TODO = 'test a solved game';
+    is( $game->solve(), 0 );
+}
+
+done_testing();

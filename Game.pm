@@ -1,5 +1,4 @@
 package Game;
-use Data::Dumper;
 use Board;
 
 sub new {
@@ -9,7 +8,7 @@ sub new {
     my $self = bless {
         initial_data => $args{initial_data},
         board        => Board->new( initial_data => $args{initial_data} ),
-        debug_log    => $args{debug_log},
+        debug        => $args{debug},
     }, $class;
 
     return $self;
@@ -27,7 +26,7 @@ sub solve {
 
     $self->board()->debug();
 
-    return 1;
+    return $self->board()->solved();
 }
 
 sub algorithm_1 {
@@ -38,19 +37,19 @@ sub algorithm_1 {
             $self->evaluate_possibles( $ancho, $alto );
         }
     }
-    print Dumper( $self->board()->{board} );
     foreach my $ancho (1..9){
         foreach my $alto (1..9){
             $self->search_possibles( $ancho, $alto );
         }
     }
+    
 }
 
 sub evaluate_possibles {
     my $self = shift;
     my ($ancho_,$alto_) = @_;
     
-    if ( $self->board()->get_value($ancho,$alto_) != 0 ){
+    if ( $self->board()->get_value($ancho_,$alto_) != 0 ){
         map { $self->board()->{board}->{$ancho_}{$alto_}{possibles}{$_} = 0 } 1..9;
         return; 
     }
@@ -81,19 +80,18 @@ sub search_possibles {
 
     my ($ancho, $alto) = @_;
     
-    # Busco posibles de una celda
-    my @posibles = grep { 
-        $self->board()->{board}->{$ancho}{$alto}{possibles}{$_} == 1 
-    } keys %{ $self->board()->{board}->{$ancho}{$alto}{possibles} };
-    
+    my @possibles = ();
+    for $number (1..9){
+        if( $self->board()->{board}->{$ancho}{$alto}{possibles}{$number} == 1 ){
+            push @possibles, $number;
+        }
+    }
 
-    print Dumper( \@possibles );    
-    
     # Si hay un solo valor posible lo seteo en la celda
     if ( scalar @possibles == 1 ){
-    my $posible = $possibles[0];
-        print Dumper( "$ancho-$alto: posibleee: $posible" );
-        $self->board()->set_value( $ancho,$alto,$possibles[0]);
+        my $possible = $possibles[0];
+        $self->board()->set_value( $ancho,$alto,$possible);
+        $self->board()->update_possibles( $ancho,$alto,$possible);
         $self->board()->update_remaining();
     }
 } 
