@@ -2,19 +2,10 @@
 use strict;
 use Data::Dumper;
 use Game;
+use JSONParser;
 
-# Ojo! El tablero esta inverso en esta representacion.
-my $initial_data = [
-    [1,2,3,4,5,6,7,8,0],
-    [2,0,0,0,0,0,0,0,0],
-    [3,0,0,0,0,0,0,0,0],
-    [4,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [6,0,0,0,0,0,0,0,0],
-    [7,0,0,0,0,0,0,0,0],
-    [8,0,0,0,0,0,0,0,0],
-    [9,0,0,0,0,0,0,0,0],
-];
+my $parser = JSONParser->new(filename => '001.json');
+my $initial_data = $parser->get_data();
 
-my $game = Game->new( initial_data => $initial_data );
+my $game = Game->new( initial_data => $initial_data, debug_log => 1, debug => 1 );
 my $solved = $game->solve();

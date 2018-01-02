@@ -1,23 +1,13 @@
 
 use Test::More;
+use JSONParser;
 
 use strict;
 use Data::Dumper;
 
 my $tablero = {};
-
-# Ojo! El tablero esta inverso en esta representacion.
-my $datos_iniciales = [
-    [1,2,3,4,5,6,7,8,0],
-    [2,0,0,0,0,0,0,0,0],
-    [3,0,0,0,0,0,0,0,0],
-    [4,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0],
-    [6,0,0,0,0,0,0,0,0],
-    [7,0,0,0,0,0,0,0,0],
-    [8,0,0,0,0,0,0,0,0],
-    [9,0,0,0,0,0,0,0,0],
-];
+my $parser = JSONParser->new(filename => '001.json');
+my $datos_iniciales = $parser->get_data();
 
 foreach my $ancho (1..9){
     foreach my $alto (1..9){
@@ -25,8 +15,9 @@ foreach my $ancho (1..9){
         $tablero->{$ancho}{$alto}{posibles} = posibles_default();
     }   
 }
-
-algoritmo1();
+for(1..100){
+    algoritmo1();
+}
 
 print debug_tablero();
 
@@ -83,6 +74,40 @@ sub calcular_posibles {
         if ( $valor != 0 ){
             $tablero->{$ancho_}{$alto_}{posibles}{$valor} = 0;
         }
+    }
+
+    # Recorro la zona
+    my $rangos = get_square( $ancho_, $alto_ );
+    my $imposibles = {};
+    foreach my $ancho ( @{$rangos->[0]} ) {
+        foreach my $alto ( @{$rangos->[1]} ) {
+            $imposibles->{ $tablero->{$ancho}{$alto}{numero} } = 1;
+        }
+    }
+
+    foreach my $ancho ( @{$rangos->[0]} ) {
+        foreach my $alto ( @{$rangos->[1]} ) {
+            foreach my $valor (1..9) {
+                $tablero->{$ancho}{$alto}{posibles}{$valor} = 0 if exists $imposibles->{$valor};
+            }
+        }
+    }
+
+}
+
+sub get_square {
+    my ($ancho_,$alto_) = @_;
+    return [ get_range($ancho_), get_range($alto_) ];
+}
+
+sub get_range {
+    my $value = shift;
+    if($value < 4){
+        return [1..3];
+    }elsif($value < 7){
+        return [4..6];
+    }else{
+        return [7..9];
     }
 }
 
