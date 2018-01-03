@@ -46,10 +46,10 @@ is( $board->get_remaining(), 80 );
 
 # set_possible
 $board->set_possible(5,5,5,0);
-is( $board->{board}{5}{5}{possibles}{5}, 0 );
+is( $board->is_possible(5,5,5), 0 );
 
 $board->set_possible(5,5,5,1);
-is( $board->{board}{5}{5}{possibles}{5}, 1 );
+is( $board->is_possible(5,5,5), 1 );
 
 is( $board->solved(), 0 );
 TODO: {
