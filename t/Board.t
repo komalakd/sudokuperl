@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-use Test::More tests => 31;
+use Test::More tests => 32;
 
 use strict;
 use lib('../');
@@ -12,12 +12,19 @@ require_ok('Board');
 my $parser = JSONParser->new(filename => '000.json');
 my $initial_data = $parser->get_data();
 
+
 # new
 my $board = Board->new( initial_data => $initial_data );
 
 is( $board->get_remaining(), 81 );
 
-is_deeply( $board->{initial_data}, $initial_data, 'data structures should be the same');
+is_deeply( $board->get_initial_data(), $initial_data, 'data structures should be the same');
+
+# process_initial_data
+TODO: {
+    local $TODO = 'process_initial_data';
+    is( $board->process_initial_data(), '???' );
+}
 
 # get_value
 is( $board->get_value(1,1), 1 );

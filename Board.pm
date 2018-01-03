@@ -31,6 +31,11 @@ sub process_initial_data {
     }
 }
 
+sub get_initial_data {
+    my $self = shift;
+    return $self->{initial_data};
+}
+
 sub set_value {
     my $self = shift;
     my ($ancho,$alto,$number) = @_;

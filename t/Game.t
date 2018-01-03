@@ -36,7 +36,7 @@ is_deeply( $game->get_range( 6 ), [4..6] );
 is_deeply( $game->get_range( 7 ), [7..9] );
 is_deeply( $game->get_range( 9 ), [7..9] );
 
-# ger_square
+# get_square
 my $square = $game->get_square(1,1);
 is_deeply( $square->[0], [1..3] );
 is_deeply( $square->[1], [1..3] );
