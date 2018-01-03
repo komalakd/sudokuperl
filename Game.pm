@@ -77,7 +77,7 @@ sub evaluate_possibles {
     }
 
     # Recorro la zona
-    my $rangos = get_square( $ancho_, $alto_ );
+    my $rangos = $self->get_square( $ancho_, $alto_ );
     my $imposibles = {};
     foreach my $ancho ( @{$rangos->[0]} ) {
         foreach my $alto ( @{$rangos->[1]} ) {
@@ -96,11 +96,13 @@ sub evaluate_possibles {
 }
 
 sub get_square {
+    my $self = shift;
     my ($ancho_,$alto_) = @_;
-    return [ get_range($ancho_), get_range($alto_) ];
+    return [ $self->get_range($ancho_), $self->get_range($alto_) ];
 }
 
 sub get_range {
+    my $self = shift;
     my $value = shift;
     if($value < 4){
         return [1..3];
