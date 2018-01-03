@@ -10,7 +10,7 @@ sub new {
         initial_data => $args{initial_data},
         board        => Board->new( initial_data => $args{initial_data} ),
         debug        => $args{debug},
-        debug_log   => $args{debug_log},
+        debug_log    => $args{debug_log},
     }, $class;
 
     return $self;
@@ -52,7 +52,7 @@ sub evaluate_possibles {
     my ($ancho_,$alto_) = @_;
     
     if ( $self->board()->get_value($ancho_,$alto_) != 0 ){
-        map { $self->board()->{board}->{$ancho_}{$alto_}{possibles}{$_} = 0 } 1..9;
+        map { $self->board()->{board}->{$ancho_}{$alto_}{possibles}{$_} = 0 } 1..9; # WTF FIXME
         return; 
     }
     # Recorro la columna
@@ -62,7 +62,7 @@ sub evaluate_possibles {
             print "$ancho_-$alto_: evaluando columna en celda ($ancho_,$alto) valor: $valor".$/; # Debug
         }
         if ( $valor != 0 ){
-            $self->board()->{board}->{$ancho_}{$alto_}{possibles}{$valor} = 0;
+            $self->board()->set_possible($ancho_,$alto_,$valor,0);
         }
     }
     # Recorro la fila
@@ -72,7 +72,7 @@ sub evaluate_possibles {
             print "$ancho_-$alto_: evaluando fila    en celda ($ancho,$alto_) valor: $valor".$/; # Debug
         }
         if ( $valor != 0 ){
-            $self->board()->{board}->{$ancho_}{$alto_}{possibles}{$valor} = 0;
+            $self->board()->set_possible($ancho_,$alto_,$valor,0);
         }
     }
 
@@ -120,7 +120,7 @@ sub search_possibles {
     
     my @possibles = ();
     for $number (1..9){
-        if( $self->board()->{board}->{$ancho}{$alto}{possibles}{$number} == 1 ){
+        if( $self->board()->is_possible($ancho,$alto,$number) ){
             push @possibles, $number;
         }
     }

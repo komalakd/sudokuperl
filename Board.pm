@@ -65,6 +65,20 @@ sub set_possible {
     $self->{board}->{$ancho}{$alto}{possibles}{$number} = $valor;
 }
 
+sub get_possibles {
+    my $self = shift;
+    my ($ancho,$alto) = @_;
+
+    return $self->{board}->{$ancho}{$alto}{possibles};
+}
+
+sub is_possible {
+    my $self = shift;
+    my ($ancho,$alto,$number) = @_;
+
+    return exists $self->{board}->{$ancho}{$alto}{possibles}{$number} ? 1 : 0;
+}
+
 sub get_value {
     my $self = shift;
     my ($ancho,$alto) = @_;
