@@ -38,6 +38,11 @@ sub set_value {
     $self->{board}->{$ancho}{$alto}{number} = $number;
 }
 
+sub get_remaining {
+    my $self = shift;
+    return $self->{remaining};
+}
+
 sub update_remaining {
     my $self = shift;
     $self->{remaining} = $self->{remaining} - 1;
@@ -76,7 +81,7 @@ sub is_possible {
     my $self = shift;
     my ($ancho,$alto,$number) = @_;
 
-    return exists $self->{board}->{$ancho}{$alto}{possibles}{$number} ? 1 : 0;
+    return $self->{board}->{$ancho}{$alto}{possibles}{$number};
 }
 
 sub get_value {
