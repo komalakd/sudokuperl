@@ -49,4 +49,13 @@ my $square = $game->get_square(7,7);
 is_deeply( $square->[0], [7..9] );
 is_deeply( $square->[1], [7..9] );
 
+#evaluate_possibles
+
+
+#search_possibles
+
+
+#algorithm_1
+
+
 done_testing();

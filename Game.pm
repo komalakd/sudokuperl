@@ -52,9 +52,10 @@ sub evaluate_possibles {
     my ($ancho_,$alto_) = @_;
     
     if ( $self->board()->get_value($ancho_,$alto_) != 0 ){
-        map { $self->board()->{board}->{$ancho_}{$alto_}{possibles}{$_} = 0 } 1..9; # WTF FIXME
+        map { $self->board()->set_possible($ancho_,$alto_,$_,0) } 1..9;
         return; 
     }
+    
     # Recorro la columna
     foreach my $alto (1..9){
         my $valor = $self->board()->get_value($ancho_,$alto);
@@ -65,6 +66,7 @@ sub evaluate_possibles {
             $self->board()->set_possible($ancho_,$alto_,$valor,0);
         }
     }
+    
     # Recorro la fila
     foreach my $ancho (1..9){
         my $valor = $self->board()->get_value($ancho,$alto_);
@@ -88,7 +90,7 @@ sub evaluate_possibles {
     foreach my $ancho ( @{$rangos->[0]} ) {
         foreach my $alto ( @{$rangos->[1]} ) {
             foreach my $valor (1..9) {
-                $self->board()->{board}->{$ancho}{$alto}{possibles}{$valor} = 0 if exists $imposibles->{$valor};
+                $self->board()->set_possible($ancho,$alto,$valor,0) if exists $imposibles->{$valor};
             }
         }
     }
