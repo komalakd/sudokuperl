@@ -5,18 +5,19 @@ use strict;
 use lib('../');
 
 use JSONParser;
+use TestObjectFactory;
 
 use_ok('Game');
 require_ok('Game');
 
-my $parser = JSONParser->new(filename => '000.json');
-my $initial_data = $parser->get_data();
+my $factory = TestObjectFactory->new( test_object => get_object() );
 
-my $game = Game->new( initial_data => $initial_data );
+my $game = $factory->get_object();
+
 
 SKIP: {
-	local $TODO = 'i need to test this...';
-	ok( Game->new( $initial_data ) );
+    local $TODO = 'i need to test this...';
+    ok( $game );
 }
 
 is( $game->solve(), 0 );
@@ -25,6 +26,8 @@ TODO: {
     local $TODO = 'test a solved game';
     is( $game->solve(), 0 );
 }
+
+my $game = $factory->get_object();
 
 # get_range
 is_deeply( $game->get_range( 1 ), [1..3] );
@@ -50,12 +53,25 @@ is_deeply( $square->[0], [7..9] );
 is_deeply( $square->[1], [7..9] );
 
 #evaluate_possibles
+my $game = $factory->get_object();
 
 
 #search_possibles
+my $game = $factory->get_object();
+
 
 
 #algorithm_1
+my $game = $factory->get_object();
+
 
 
 done_testing();
+
+sub get_object {
+    my $parser = JSONParser->new(filename => '000.json');
+    my $initial_data = $parser->get_data();
+
+    my $game = Game->new( initial_data => $initial_data );
+    return $game;
+}
