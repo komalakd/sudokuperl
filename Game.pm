@@ -164,12 +164,12 @@ sub evaluate_possibles {
 
 sub check_column {
     my $self = shift;
-    my ($alto_) = @_;
+    my ($ancho_) = @_;
 
     foreach my $alto (1..9){
         my $valor = $self->get_value($ancho_,$alto);
         if( $self->{debug_log} ){
-            print "$ancho_-$alto_: evaluando columna en celda ($ancho_,$alto) valor: $valor".$/; # Debug
+            print "Evaluando columna en celda ($ancho_,$alto) valor: $valor".$/; # Debug
         }
         if ( $valor != 0 ){
             $self->set_possible($ancho_,$alto_,$valor,0);
@@ -184,7 +184,7 @@ sub check_row {
     foreach my $ancho (1..9){
         my $valor = $self->get_value($ancho,$alto_);
         if( $self->{debug_log} ){
-            print "$ancho_-$alto_: evaluando fila    en celda ($ancho,$alto_) valor: $valor".$/; # Debug
+            print "Evaluando fila    en celda ($ancho,$alto_) valor: $valor".$/; # Debug
         }
         if ( $valor != 0 ){
             $self->set_possible($ancho_,$alto_,$valor,0);
