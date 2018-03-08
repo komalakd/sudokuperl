@@ -4,6 +4,13 @@ use Test::More tests => 32;
 use strict;
 use lib('../');
 
+use Data::Dumper;
+
+use MockFactory qw(
+    Game
+);
+use Game; # test mockfactory
+
 use JSONParser;
 use TestObjectFactory;
 

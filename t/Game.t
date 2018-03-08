@@ -4,6 +4,10 @@ use Test::More tests => 17;
 use strict;
 use lib('../');
 
+use MockFactory qw(
+    Board
+);
+
 use JSONParser;
 use TestObjectFactory;
 
