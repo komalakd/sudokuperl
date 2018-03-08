@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-use Test::More tests => 17;
+use Test::More tests => 46;
 
 use strict;
 use lib('../');
@@ -14,10 +14,8 @@ use TestObjectFactory;
 use_ok('Game');
 require_ok('Game');
 
-my $factory = TestObjectFactory->new( test_object => get_object() );
 
 my $game = $factory->get_object();
-
 
 SKIP: {
     local $TODO = 'i need to test this...';
@@ -70,6 +68,78 @@ my $game = $factory->get_object();
 
 
 
+
+
+
+
+
+
+
+
+my $game = $factory->get_object();
+
+is( $game->get_remaining(), 81 );
+
+is_deeply( $game->get_initial_data(), get_initial_data(), 'data structures should be the same');
+
+# process_initial_data
+TODO: {
+    local $TODO = 'process_initial_data';
+    is( $game->process_initial_data(), '???' );
+}
+
+
+my $game = $factory->get_object();
+
+# get_value
+is( $game->get_value(1,1), 1 );
+is( $game->get_value(9,9), 0 );
+
+
+my $game = $factory->get_object();
+
+# set_value
+$game->set_value(1,1,9);
+is( $game->get_value(1,1), 9 );
+
+my $game = $factory->get_object();
+
+# update_possibles
+$game->update_possibles(1,1,9);
+
+foreach my $ancho (1..9){
+    is( $game->is_possible($ancho,1,9), 0 );
+}
+
+foreach my $alto (1..9){
+    is( $game->is_possible(1,$alto,9), 0 );
+}
+
+my $game = $factory->get_object();
+
+# update_remaining # FIXME
+$game->set_value(1,1,1);
+is( $game->get_value(1,1), 1 );
+$game->update_remaining();
+is( $game->get_remaining(), 80 );
+
+my $game = $factory->get_object();
+
+# set_possible
+$game->set_possible(5,5,5,0);
+is( $game->is_possible(5,5,5), 0 );
+
+$game->set_possible(5,5,5,1);
+is( $game->is_possible(5,5,5), 1 );
+
+my $game = $factory->get_object();
+
+is( $game->solved(), 0 );
+
+
+
+
+
 done_testing();
 
 sub get_object {
@@ -78,4 +148,9 @@ sub get_object {
 
     my $game = Game->new( initial_data => $initial_data );
     return $game;
+}
+
+sub get_initial_data {
+    my $parser = JSONParser->new(filename => '000.json');
+    return $parser->get_data();
 }
