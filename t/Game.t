@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-use Test::More tests => 50;
+use Test::More tests => 53;
 use Test::MockModule;
 
 use strict;
@@ -127,7 +127,31 @@ sub TestGetPossiblesCell {
 }
 
 sub TestSearchPossibles {
-    my $game = $factory->get_object();
+
+    {
+        my $game = $factory->get_object();
+        my $module = Test::MockModule->new('Game');
+        $module->mock('get_possibles_cell', sub { return []; });
+
+        is( $game->search_possibles, 0, 'ok: no possibles' );
+    }
+
+    {
+        my $game = $factory->get_object();
+        my $module = Test::MockModule->new('Game');
+        $module->mock('get_possibles_cell', sub { return [1]; });
+
+        is( $game->search_possibles, 1, 'ok: one possible' );
+    }
+
+    {
+        my $game = $factory->get_object();
+        my $module = Test::MockModule->new('Game');
+        $module->mock('get_possibles_cell', sub { return [1,2]; });
+
+        is( $game->search_possibles, 0, 'ok: two possibles' );
+    }
+
 }
 
 sub TestAlgorithm1 {

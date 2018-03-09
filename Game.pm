@@ -245,7 +245,11 @@ sub search_possibles {
         $self->set_value( $ancho,$alto,$possible);
         $self->update_possibles( $ancho,$alto,$possible);
         $self->update_remaining();
+
+        return 1;
     }
+
+    return 0;
 }
 
 sub get_possibles_cell {
