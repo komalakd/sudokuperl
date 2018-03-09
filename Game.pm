@@ -148,7 +148,7 @@ sub evaluate_possibles {
     
     if ( $self->get_value($ancho_,$alto_) != 0 ){
         map { $self->set_possible($ancho_,$alto_,$_,0) } 1..9;
-        return; 
+        return;
     }
     
     # Recorro la columna
@@ -160,6 +160,7 @@ sub evaluate_possibles {
     # Recorro la zona
     $self->check_square( $ancho_, $alto_ );
 
+    return;
 }
 
 sub check_column {
@@ -236,21 +237,30 @@ sub search_possibles {
 
     my ($ancho, $alto) = @_;
     
-    my @possibles = ();
-    for $number (1..9){
-        if( $self->is_possible($ancho,$alto,$number) ){
-            push @possibles, $number;
-        }
-    }
-
+    my $possibles = $self->get_possibles_cell( $ancho, $alto );
+    
     # Si hay un solo valor posible lo seteo en la celda
-    if ( scalar @possibles == 1 ){
-        my $possible = $possibles[0];
+    if ( scalar @$possibles == 1 ){
+        my $possible = $possibles->[0];
         $self->set_value( $ancho,$alto,$possible);
         $self->update_possibles( $ancho,$alto,$possible);
         $self->update_remaining();
     }
-} 
+}
+
+sub get_possibles_cell {
+    my $self = shift;
+    my ($ancho, $alto) = @_;
+
+    my $possibles = [];
+    for $number (1..9){
+        if( $self->is_possible($ancho,$alto,$number) ){
+            push @$possibles, $number;
+        }
+    }
+
+    return $possibles;
+}
 
 sub get_initial_data {
     my $self = shift;

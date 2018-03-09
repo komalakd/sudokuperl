@@ -1,5 +1,6 @@
 #!/usr/bin/perl
-use Test::More tests => 43;
+use Test::More tests => 50;
+use Test::MockModule;
 
 use strict;
 use lib('../');
@@ -19,9 +20,13 @@ sub RunTestCase {
     TestSolvedGame();
     TestRanges();
     TestSquares();
+    TestCheckColumn();
+    TestCheckRow();
+    TestRemaining();
     TestEvaluatePossibles();
+    TestGetPossiblesCell();
     TestSearchPossibles();
-    TestAlgorith1();
+    TestAlgorithm1();
     TestRemaining();
     TestInitialData();
     TestProcessInitialData();
@@ -82,18 +87,62 @@ sub TestSquares {
 }
 
 sub TestEvaluatePossibles {
-    #evaluate_possibles
     my $game = $factory->get_object();
+    $game->evaluate_possibles();
+}
+
+sub TestGetPossiblesCell {
+    my $game = $factory->get_object();
+
+    {
+        my $module = Test::MockModule->new('Game');
+        $module->mock('is_possible', sub { 
+            my ($self, $ancho, $alto, $number) = @_;
+            return 0;
+        });
+
+        is_deeply( $game->get_possibles_cell(1,1), [], 'ok: no possibles' );
+    }
+
+    {
+        my $module = Test::MockModule->new('Game');
+        $module->mock('is_possible', sub { 
+            my ($self, $ancho, $alto, $number) = @_;
+            return $number == 1 ? 1 : 0;
+        });
+
+        is_deeply( $game->get_possibles_cell(1,1), [1], 'ok: one possible' );
+    }
+
+    {
+        my $module = Test::MockModule->new('Game');
+        $module->mock('is_possible', sub { 
+            my ($self, $ancho, $alto, $number) = @_;
+            return $number < 3 ? 1 : 0;
+        });
+
+        is_deeply( $game->get_possibles_cell(1,1), [1,2], 'ok: two possibles' );   
+    }
+
 }
 
 sub TestSearchPossibles {
-    #search_possibles
     my $game = $factory->get_object();
 }
 
-sub TestAlgorith1 {
-    #algorithm_1
+sub TestAlgorithm1 {
     my $game = $factory->get_object();
+    is( $game->algorithm_1(), '' ); # FIXME
+}
+
+sub TestCheckColumn {
+    my $game = $factory->get_object();
+    is( $game->check_column(), '' ); # FIXME
+}
+
+sub TestCheckRow {
+    my $game = $factory->get_object();
+    is( $game->check_row(), '' ); # FIXME
 }
 
 sub TestRemaining {
@@ -111,7 +160,7 @@ sub TestProcessInitialData {
     # process_initial_data
     TODO: {
         local $TODO = 'process_initial_data';
-        is( $game->process_initial_data(), '???' );
+        is( $game->process_initial_data(), '' );
     }
 }
 
