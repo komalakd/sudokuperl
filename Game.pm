@@ -226,17 +226,36 @@ sub check_square {
     my $rango_ancho = $rangos->{ancho};
     my $rango_alto  = $rangos->{alto};
 
-    my $imposibles = {};
+    my $imposibles = $self->get_imposibles( $rango_ancho, $rango_alto );
+
+    $self->set_imposibles( $rango_ancho, $rango_alto, $imposibles );
+}
+
+sub get_imposibles {
+    my $self = shift;
+    my ($rango_ancho, $rango_alto) = @_;
+
+    my $imposibles = [];
     foreach my $ancho ( @$rango_ancho ) {
         foreach my $alto ( @$rango_alto ) {
-            $imposibles->{ $self->get_value($ancho,$alto) } = 1;
+            my $valor = $self->get_value( $ancho, $alto);
+            push @$imposibles, $valor if $valor != 0;
         }
     }
 
+    return $imposibles;
+}
+
+sub set_imposibles {
+    my $self = shift;
+    my ($rango_ancho, $rango_alto, $imposibles) = @_;
+
+    return unless @$imposibles;
+
     foreach my $ancho ( @$rango_ancho ) {
         foreach my $alto ( @$rango_alto ) {
-            foreach my $valor (1..9) {
-                $self->set_possible($ancho,$alto,$valor,0) if exists $imposibles->{$valor};
+            foreach my $valor ( @$imposibles ) {
+                $self->set_possible($ ancho, $alto, $valor, 0);
             }
         }
     }
