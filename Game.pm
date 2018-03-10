@@ -146,10 +146,7 @@ sub evaluate_possibles {
     my $self = shift;
     my ($ancho_,$alto_) = @_;
     
-    if ( $self->get_value($ancho_,$alto_) != 0 ){
-        map { $self->set_possible($ancho_,$alto_,$_,0) } 1..9;
-        return;
-    }
+    $self->set_default_possibles( $ancho_, $alto_ );
     
     # Recorro la columna
     $self->check_column( $ancho_ );
@@ -161,6 +158,18 @@ sub evaluate_possibles {
     $self->check_square( $ancho_, $alto_ );
 
     return;
+}
+
+sub set_default_possibles {
+    my $self = shift;
+    my ($ancho_,$alto_) = @_;
+    
+    if ( $self->get_value($ancho_,$alto_) != 0 ){
+        map { $self->set_possible($ancho_,$alto_,$_,0) } 1..9;
+        return 1;
+    }
+
+    return 0;
 }
 
 sub check_column {

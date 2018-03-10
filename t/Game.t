@@ -1,5 +1,5 @@
 #!/usr/bin/perl
-use Test::More tests => 53;
+use Test::More tests => 55;
 use Test::MockModule;
 
 use strict;
@@ -35,6 +35,7 @@ sub RunTestCase {
     TestUpdatePossibles();
     TestUpdateRemaining();
     TestSetPossible();
+    TestSetDefaultPossibles();
 }
 
 sub TestUseOk {
@@ -153,6 +154,26 @@ sub TestSearchPossibles {
     }
 
 }
+
+sub TestSetDefaultPossibles {
+
+    {
+        my $game = $factory->get_object();
+        my $module = Test::MockModule->new('Game');
+        $module->mock('get_value', sub { return 0; });
+
+        is( $game->set_default_possibles(), 0, 'ok: do not update possibles' );
+    }
+
+    {
+        my $game = $factory->get_object();
+        my $module = Test::MockModule->new('Game');
+        $module->mock('get_value', sub { return 1; });
+
+        is( $game->set_default_possibles(), 1, 'ok: update possibles' );
+    }
+}
+    
 
 sub TestAlgorithm1 {
     my $game = $factory->get_object();
