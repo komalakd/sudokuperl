@@ -178,9 +178,9 @@ sub check_column {
 
     foreach my $alto (1..9){
         my $valor = $self->get_value($ancho_,$alto);
-        if( $self->{debug_log} ){
-            print "Evaluando columna en celda ($ancho_,$alto) valor: $valor".$/; # Debug
-        }
+        
+        $self->debug_check( $ancho_, $alto, $valor );
+        
         if ( $valor != 0 ){
             $self->set_possible($ancho_,$alto_,$valor,0);
         }
@@ -193,13 +193,29 @@ sub check_row {
 
     foreach my $ancho (1..9){
         my $valor = $self->get_value($ancho,$alto_);
-        if( $self->{debug_log} ){
-            print "Evaluando fila    en celda ($ancho,$alto_) valor: $valor".$/; # Debug
-        }
+        
+        $self->debug_check( $ancho, $alto_, $valor );
+
         if ( $valor != 0 ){
             $self->set_possible($ancho_,$alto_,$valor,0);
         }
     }
+}
+
+sub debug_check {
+    my $self = shift;
+    my ($ancho, $alto, $valor, $type) = @_;
+
+    return unless $self->{debug_log};
+
+    if( $type eq 'column' ){
+        print "Evaluando columna en celda ($ancho,$alto) valor: $valor".$/; # Debug
+    }
+
+    if( $type eq 'row' ){
+        print "Evaluando fila    en celda ($ancho,$alto) valor: $valor".$/; # Debug
+    }
+
 }
 
 sub check_square {
@@ -207,15 +223,18 @@ sub check_square {
     my ($ancho_,$alto_) = @_;
 
     my $rangos = $self->get_square( $ancho_, $alto_ );
+    my $rango_ancho = $rangos->{ancho};
+    my $rango_alto  = $rangos->{alto};
+
     my $imposibles = {};
-    foreach my $ancho ( @{$rangos->[0]} ) {
-        foreach my $alto ( @{$rangos->[1]} ) {
+    foreach my $ancho ( @$rango_ancho ) {
+        foreach my $alto ( @$rango_alto ) {
             $imposibles->{ $self->get_value($ancho,$alto) } = 1;
         }
     }
 
-    foreach my $ancho ( @{$rangos->[0]} ) {
-        foreach my $alto ( @{$rangos->[1]} ) {
+    foreach my $ancho ( @$rango_ancho ) {
+        foreach my $alto ( @$rango_alto ) {
             foreach my $valor (1..9) {
                 $self->set_possible($ancho,$alto,$valor,0) if exists $imposibles->{$valor};
             }
@@ -226,7 +245,12 @@ sub check_square {
 sub get_square {
     my $self = shift;
     my ($ancho_,$alto_) = @_;
-    return [ $self->get_range($ancho_), $self->get_range($alto_) ];
+    
+    return {
+        ancho => $self->get_range($ancho_),
+        alto  => $self->get_range($alto_),
+    };
+
 }
 
 sub get_range {

@@ -75,16 +75,16 @@ sub TestSquares {
 
     # get_square
     my $square = $game->get_square(1,1);
-    is_deeply( $square->[0], [1..3] );
-    is_deeply( $square->[1], [1..3] );
+    is_deeply( $square->{ancho}, [1..3] );
+    is_deeply( $square->{alto} , [1..3] );
 
     my $square = $game->get_square(4,4);
-    is_deeply( $square->[0], [4..6] );
-    is_deeply( $square->[1], [4..6] );
+    is_deeply( $square->{ancho}, [4..6] );
+    is_deeply( $square->{alto} , [4..6] );
 
     my $square = $game->get_square(7,7);
-    is_deeply( $square->[0], [7..9] );
-    is_deeply( $square->[1], [7..9] );
+    is_deeply( $square->{ancho}, [7..9] );
+    is_deeply( $square->{alto} , [7..9] );
 }
 
 sub TestEvaluatePossibles {
@@ -186,6 +186,11 @@ sub TestCheckColumn {
 }
 
 sub TestCheckRow {
+    my $game = $factory->get_object();
+    is( $game->check_row(), '' ); # FIXME
+}
+
+sub TestCheckSquare {
     my $game = $factory->get_object();
     is( $game->check_row(), '' ); # FIXME
 }
