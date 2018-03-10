@@ -1,5 +1,7 @@
-#!/usr/bin/perl
-use Test::More tests => 55;
+package Test::Game;
+use base qw(Test::Class);
+
+use Test::More;
 use Test::MockModule;
 
 use strict;
@@ -9,55 +11,45 @@ use Game;
 use JSONParser;
 use TestObjectFactory;
 
-my $factory = TestObjectFactory->new( test_object => GetTestObject() );
 
-RunTestCase();
-done_testing();
 
-sub RunTestCase {
-    TestUseOk();
-    TestNotSolvedGame();
-    TestSolvedGame();
-    TestRanges();
-    TestSquares();
-    TestCheckColumn();
-    TestCheckRow();
-    TestRemaining();
-    TestEvaluatePossibles();
-    TestGetPossiblesCell();
-    TestSearchPossibles();
-    TestAlgorithm1();
-    TestRemaining();
-    TestInitialData();
-    TestProcessInitialData();
-    TestGetValue();
-    TestSetValue();
-    TestUpdatePossibles();
-    TestUpdateRemaining();
-    TestSetPossible();
-    TestSetDefaultPossibles();
+#RunTestCase();
+#done_testing();
+
+sub make_fixture : Test(setup) {
+    my $self = shift;
+    my $factory = TestObjectFactory->new( test_object => GetTestObject() );
+    $self->{factory} = $factory;
 }
 
-sub TestUseOk {
+sub get_test_instance {
+    my $self = shift;
+    return $self->{factory}->get_object();
+}
+
+sub TestUseOk : Test {
     use_ok('Game');
 }
 
-sub TestNotSolvedGame {
-    my $game = $factory->get_object();
+sub TestNotSolvedGame : Test {
+    my $self = shift;
+    my $game = $self->get_test_instance();
     is( $game->solve(), 0 );
 }
 
-sub TestSolvedGame {
-    my $game = $factory->get_object();
+sub TestSolvedGame : Test {
+    my $self = shift;
+    my $game = $self->get_test_instance();
     
-    TODO: {
-        local $TODO = 'test a solved game';
-        is( $game->solve(), 0 );
-    }
+#    TODO: {
+#        local $TODO = 'test a solved game';
+#        is( $game->solve(), 0 );
+#    }
 }
 
-sub TestRanges {
-    my $game = $factory->get_object();
+sub TestRanges : Test( 6 ) {
+    my $self = shift;
+    my $game = $self->get_test_instance();
 
     # get_range
     is_deeply( $game->get_range( 1 ), [1..3] );
@@ -70,8 +62,9 @@ sub TestRanges {
     is_deeply( $game->get_range( 9 ), [7..9] );
 }
 
-sub TestSquares {
-    my $game = $factory->get_object();
+sub TestSquares : Test( 6 ) {
+    my $self = shift;
+    my $game = $self->get_test_instance();
 
     # get_square
     my $square = $game->get_square(1,1);
@@ -87,13 +80,15 @@ sub TestSquares {
     is_deeply( $square->{alto} , [7..9] );
 }
 
-sub TestEvaluatePossibles {
-    my $game = $factory->get_object();
+sub TestEvaluatePossibles : Test {
+    my $self = shift;
+    my $game = $self->get_test_instance();
     $game->evaluate_possibles();
 }
 
-sub TestGetPossiblesCell {
-    my $game = $factory->get_object();
+sub TestGetPossiblesCell : Test( 3 ) {
+    my $self = shift;
+    my $game = $self->get_test_instance();
 
     {
         my $module = Test::MockModule->new('Game');
@@ -127,10 +122,11 @@ sub TestGetPossiblesCell {
 
 }
 
-sub TestSearchPossibles {
+sub TestSearchPossibles : Test( 3 ) {
+    my $self = shift;
 
     {
-        my $game = $factory->get_object();
+        my $game = $self->get_test_instance();
         my $module = Test::MockModule->new('Game');
         $module->mock('get_possibles_cell', sub { return []; });
 
@@ -138,7 +134,7 @@ sub TestSearchPossibles {
     }
 
     {
-        my $game = $factory->get_object();
+        my $game = $self->get_test_instance();
         my $module = Test::MockModule->new('Game');
         $module->mock('get_possibles_cell', sub { return [1]; });
 
@@ -146,7 +142,7 @@ sub TestSearchPossibles {
     }
 
     {
-        my $game = $factory->get_object();
+        my $game = $self->get_test_instance();
         my $module = Test::MockModule->new('Game');
         $module->mock('get_possibles_cell', sub { return [1,2]; });
 
@@ -155,10 +151,11 @@ sub TestSearchPossibles {
 
 }
 
-sub TestSetDefaultPossibles {
+sub TestSetDefaultPossibles : Test( 2 ) {
+    my $self = shift;
 
     {
-        my $game = $factory->get_object();
+        my $game = $self->get_test_instance();
         my $module = Test::MockModule->new('Game');
         $module->mock('get_value', sub { return 0; });
 
@@ -166,7 +163,7 @@ sub TestSetDefaultPossibles {
     }
 
     {
-        my $game = $factory->get_object();
+        my $game = $self->get_test_instance();
         my $module = Test::MockModule->new('Game');
         $module->mock('get_value', sub { return 1; });
 
@@ -175,63 +172,73 @@ sub TestSetDefaultPossibles {
 }
     
 
-sub TestAlgorithm1 {
-    my $game = $factory->get_object();
+sub TestAlgorithm1 : Test {
+    my $self = shift;
+    my $game = $self->get_test_instance();
     is( $game->algorithm_1(), '' ); # FIXME
 }
 
-sub TestCheckColumn {
-    my $game = $factory->get_object();
+sub TestCheckColumn : Test {
+    my $self = shift;
+    my $game = $self->get_test_instance();
     is( $game->check_column(), '' ); # FIXME
 }
 
-sub TestCheckRow {
-    my $game = $factory->get_object();
+sub TestCheckRow : Test {
+    my $self = shift;
+    my $game = $self->get_test_instance();
     is( $game->check_row(), '' ); # FIXME
 }
 
-sub TestCheckSquare {
-    my $game = $factory->get_object();
-    is( $game->check_row(), '' ); # FIXME
+sub TestCheckSquare : Test {
+    my $self = shift;
+    my $game = $self->get_test_instance();
+    is( $game->check_square(), '' ); # FIXME
 }
 
-sub TestRemaining {
-    my $game = $factory->get_object();
+sub TestRemaining : Test {
+    my $self = shift;
+    my $game = $self->get_test_instance();
     is( $game->get_remaining(), 81 );
 }
 
-sub TestInitialData {
-    my $game = $factory->get_object();
+sub TestInitialData : Test {
+    my $self = shift;
+    my $game = $self->get_test_instance();
     is_deeply( $game->get_initial_data(), get_initial_data(), 'data structures should be the same');
 }
 
-sub TestProcessInitialData {
-    my $game = $factory->get_object();
-    # process_initial_data
-    TODO: {
-        local $TODO = 'process_initial_data';
-        is( $game->process_initial_data(), '' );
-    }
+sub TestProcessInitialData : Test {
+    my $self = shift;
+    my $game = $self->get_test_instance();
+    
+#    TODO: {
+#        local $TODO = 'process_initial_data';
+#        is( $game->process_initial_data(), '' );
+#    }
 }
 
-sub TestGetValue {
-    my $game = $factory->get_object();
+sub TestGetValue : Test( 2 ) {
+    my $self = shift;
+    my $game = $self->get_test_instance();
 
     # get_value
     is( $game->get_value(1,1), 1 );
     is( $game->get_value(9,9), 0 );
 }
 
-sub TestSetValue {
-    my $game = $factory->get_object();
+sub TestSetValue : Test {
+    my $self = shift;
+    my $game = $self->get_test_instance();
 
     # set_value
     $game->set_value(1,1,9);
     is( $game->get_value(1,1), 9 );
 }
 
-sub TestUpdatePossibles {
-    my $game = $factory->get_object();
+sub TestUpdatePossibles : Test( 18 ) {
+    my $self = shift;
+    my $game = $self->get_test_instance();
 
     # update_possibles
     $game->update_possibles(1,1,9);
@@ -245,8 +252,9 @@ sub TestUpdatePossibles {
     }
 }
 
-sub TestUpdateRemaining {
-    my $game = $factory->get_object();
+sub TestUpdateRemaining : Test( 2 ) {
+    my $self = shift;
+    my $game = $self->get_test_instance();
 
     # update_remaining # FIXME
     $game->set_value(1,1,1);
@@ -255,8 +263,9 @@ sub TestUpdateRemaining {
     is( $game->get_remaining(), 80 );
 }
 
-sub TestSetPossible {
-    my $game = $factory->get_object();
+sub TestSetPossible : Test( 2 ) {
+    my $self = shift;
+    my $game = $self->get_test_instance();
 
     # set_possible
     $game->set_possible(5,5,5,0);
@@ -277,3 +286,5 @@ sub get_initial_data {
     my $parser = JSONParser->new(filename => '000.json');
     return $parser->get_data();
 }
+
+1;
